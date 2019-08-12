@@ -13,12 +13,14 @@ namespace LogFileParser
             string fileName = "";
             string searchTerm = "";
             var shouldShowHelp = false;
+            var shouldCopyToClipboard = false;
             var occurrencesText = "occurrences";
 
             var options = new OptionSet {
                 { "f|filename=", "The full path of the filename to parse.", f => fileName = f },
                 { "s|searchTerm=", "The text that should occur in the particular line", s => searchTerm = s },
                 { "o|occurrences=", "Replaces the text \"occurrences\" to the desired value, e.g., \"errors\".", o => occurrencesText = o },
+                { "c|clipboard", "Copies the contents of the parsed output to clipboard", c => shouldCopyToClipboard = c != null },
                 { "h|help", "show this message and exit", h => shouldShowHelp = h != null }
             };
             options.Parse(args);
@@ -30,8 +32,12 @@ namespace LogFileParser
                 Console.WriteLine(result);
                 Console.WriteLine();
 
-                TextCopy.Clipboard.SetText(result);
-                Console.WriteLine("Contents copied to clipboard...");
+                if (shouldCopyToClipboard)
+                {
+                    TextCopy.Clipboard.SetText(result);
+                    Console.WriteLine("Contents copied to clipboard...");
+                }
+                
                 Console.ReadLine();
             }
 
